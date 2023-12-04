@@ -1,0 +1,162 @@
+<!--
+Index.html is the User Interface for the Sign Language Translator.
+It contains the Welcome Screen, Title Bar, Status Bar, Translator Window, and Video Call frame.
+
+To Learn More how to run this code, visit README.md
+Author: Sufiyaan Nadeem
+Fix Alerts
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--Sets up stylesheet and script file linking. Adds favicon and site title as well-->
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/png" href="Images/asl_logo.ico" />
+    <title>Sign Translator | MIME</title>
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/animate.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/animate.css') }}">
+    <script src="{{ url_for('static', filename='js/dist/build.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/main.js')}}"></script>
+    <!-- <script src="dist/build.js"></script> -->
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <style>
+        p {
+            background-repeat: repeat;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 200px;
+            font-size: 120px;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: 'Steelfish Rg', 'helvetica neue',
+                        helvetica, arial, sans-serif;
+            font-weight: 800;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+    
+
+</head>
+
+<body>
+    <!--Welcome Screen-->
+    <div id="welcomeContainer" class="animated">
+        <div id="welcomeScreen">
+            
+                <h1>Welcome to American Sign Language Translator</h1>
+            <h3 class="animated fadeInUp delay-2s"></h3>
+        </div>
+        <button id="proceedButton">Proceed</button>
+    </div>
+
+    <!--Title bar explains the stage of the program 
+    (eg: instructions for Training, Prediction, and Video Chat)-->
+    <div id="titleBar">
+        <h1 id="stage">ASL Translator</h1>
+        <h3 id="steps">Record your gesture and find out what it means</h3>
+        <button id="nextButton" class="animated flash delay-3s">Help</button>
+        <button id="predictButton" class="animated flash slideInRight faster">Translate</button>
+        <button id="backButton" class="animated slideInLeft faster">Back to Training</button>
+        <button id="videoCallBtn" class="videoCallBtn animated slideInRight faster">Video Call</button>
+    </div>
+
+    <!--Status bar shows the status of translation-->
+    <div id="status">
+        <p id="status-text">Status: Not Ready</p>
+    </div>
+
+    <!--The Translator Window displays the video of the user, various buttons, and holds
+    the training and translation screens-->
+    <div id="translatorWindow">
+
+        <!--Initial Training Holder creates the screen where users train Start and Stop Gestures-->
+        
+
+        <!--Video Holder displays the video feed from the user for training and translation.
+        It also displays the Video Call feed once the user decides to do that-->
+
+
+
+        <div class="row"  style="display: inline-flex;">
+            <div class="col">
+                <!-- <video id="video" class="videoTrain" src='' muted autoplay playsinline></video> -->
+                <img src="{{ url_for('video_feed') }}" class="videoTrain"
+                    width=650 height=370 allow="microphone; camera" id="videoCall">
+
+            </div>
+            <div class="col">
+                <img src="{{url_for('static', filename='images/aslhelp.png')}}"  alt="checkmark" height="300" width="500" class="aslhelp">
+
+            </div>
+        </div>
+        <div class="col">
+            <div class="row initialTrainingHolder">
+                <button id="RecordButton" onclick="change_label" style="color: white;">Record Gesture</button>
+            </div>
+            <div>
+                <p id="resultElement" style="font-size: xx-large; color: black; background-color: black;">The Result is: "{{ resultButton }}"</p>
+            </div>
+        </div>
+
+    </div>
+        <!--Training Holder displays the screen where users add and train new gestures-->
+        <div id="trainingHolder">
+            <h5 id="add-gesture">Add Gesture</h5>
+            <img src="{{url_for('static', filename='images/plus_sign.svg')}}" alt="Plus Sign" id="plus_sign" class="plus_sign animated">
+            <form id="add-word" autocomplete="off">
+                <input type="text" id="new-word" placeholder="New Gesture Title">
+                <input type="submit" id="submit-word" value="Add Word &#9658;">
+            </form>
+            <button id="doneRetrain" class="doneRetrain">Done Retraining</button>
+
+            <div id="trainingCommands"></div>
+        </div>
+
+        <!--Translation Holder is where the Gesture Card and Text that was translated is displayed.-->
+        <div id="translationHolder">
+            <div id="translatedCard">
+            </div>
+            <h3 id="translationText">Start Signing!</h3>
+        </div>
+    </div>
+
+    <!--Trained Card Holder contains all the trained gestures' cards.
+    It is outside the Training and Translation Windows because it has to be displayed on both screens-->
+    <div id="trainedCardsHolder">
+    </div>
+
+    <script>
+        function getResult() {
+            document.getElementById("resultElement").innerHTML("result");
+        }
+
+        function change_label(){
+            console.log("This function is executed");
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if(this.readystate == 4 && this.status == 200){
+                    console.log(this.responseText);
+                    document.getElementById("resultElement").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("POST", "http://192.168.1.101:5000/getButtonResult", true);
+            xhttp.send();
+        }
+    </script>
+</body>
+
+</html>
